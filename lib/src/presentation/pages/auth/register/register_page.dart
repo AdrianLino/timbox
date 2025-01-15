@@ -5,6 +5,7 @@ import 'package:timbox/src/presentation/pages/auth/register/register_viewmodel.d
 import 'package:timbox/src/presentation/pages/auth/register/widgets/register_content.dart';
 
 import '../../../../domain/utils/resource.dart';
+import '../../utils/auth_viewmodel.dart';
 import '../../utils/base_color.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -15,7 +16,7 @@ class RegisterPage extends StatelessWidget {
     RegisterViewModel vm = Provider.of<RegisterViewModel>(context); //Se debe instanciar el viewmodel
 
     return Scaffold(
-      backgroundColor: BACKGROUND_COLOR,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           StreamBuilder(
@@ -43,15 +44,12 @@ class RegisterPage extends StatelessWidget {
                 });
               }
               if (response is Success) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  toastification.show(
-                    context: context,
-                    title: Text("Buen trabajo"),
-                    description: Text('Tu registro fue exitoso'),
-                    type: ToastificationType.success,
-                    autoCloseDuration: Duration(seconds: 3),
-                    animationDuration: Duration(milliseconds: 300),
-                  );
+                final token = response.data["token"];
+                context.read<AuthViewModel>().login(token);
+
+                // Navegación diferida con validación de montaje
+                Future.microtask(() {
+                    Navigator.pushReplacementNamed(context, 'cargaArchivos');
                 });
 
               }

@@ -44,38 +44,62 @@ app.post("/register", async (req, res) => {
             return res.status(400).json({ error: "Todos los campos son requeridos." });
         }
 
+        // Verificar si el correo ya existe
         const emailQuery = `SELECT * FROM Personas WHERE correo = ?`;
         const emailExists = await query(emailQuery, [correo]);
 
         if (emailExists.length > 0) {
-            return res.status(400).json({ error: "Credenciales inválidas ya existentes" });
+            return res.status(400).json({ error: "El correo ya está registrado." });
         }
 
+        // Verificar si el RFC ya existe
         const rfcQuery = `SELECT * FROM Personas WHERE rfc = ?`;
         const rfcExists = await query(rfcQuery, [rfc]);
 
         if (rfcExists.length > 0) {
-            return res.status(400).json({ error: "Credenciales inválidas ya existentes" });
+            return res.status(400).json({ error: "El RFC ya está registrado." });
         }
 
         // Hashear la contraseña antes de almacenarla
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Insertar el usuario en la base de datos
         const insertQuery = `
             INSERT INTO Personas (nombre, correo, rfc, password)
             VALUES (?, ?, ?, ?)
         `;
         const results = await query(insertQuery, [nombre, correo, rfc, hashedPassword]);
 
+        // Recuperar el usuario recién creado
+        const userId = results.insertId;
+        const userQuery = `SELECT * FROM Personas WHERE id = ?`;
+        const users = await query(userQuery, [userId]);
+        const user = users[0];
+
+        // Generar un token JWT para el usuario
+        const jwt = require("jsonwebtoken");
+        const token = jwt.sign(
+            { userId: user.id, correo: user.correo }, // Datos del token
+            process.env.JWT_SECRET, // Clave secreta
+            { expiresIn: "1h" } // Duración del token
+        );
+
+        // Responder con el token y los datos del usuario
         res.status(201).json({
-            message: "Usuario registrado con éxito",
-            userId: results.insertId,
+            message: "Usuario registrado y sesión iniciada con éxito",
+            token: token,
+            user: {
+                id: user.id,
+                nombre: user.nombre,
+                correo: user.correo,
+            },
         });
     } catch (error) {
         console.error("Error al registrar el usuario:", error.message);
         res.status(500).json({ error: "Error interno del servidor." });
     }
 });
+
 
 /*const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos

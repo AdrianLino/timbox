@@ -112,33 +112,67 @@ class RegisterViewModel extends ChangeNotifier{
     notifyListeners();
   }
 
-  changePassword(String value){
+  changePassword(String value) {
     _responsecontroller.add(Init());
 
     if (value.length >= 6) {
       _state = _state.copyWith(
-          password: ValidationItem(value: value, error: '')
+        password: ValidationItem(value: value, error: ''),
       );
-    }else{
+
+      // Validar si confirmPassword ya tiene valor y no coincide con password
+      if (_state.confirmPassword.value.isNotEmpty &&
+          _state.confirmPassword.value != value) {
+        _state = _state.copyWith(
+          confirmPassword: ValidationItem(
+            value: _state.confirmPassword.value,
+            error: 'Las contraseñas no coinciden',
+          ),
+        );
+      } else {
+        _state = _state.copyWith(
+          confirmPassword: ValidationItem(
+            value: _state.confirmPassword.value,
+            error: '',
+          ),
+        );
+      }
+    } else {
       _state = _state.copyWith(
-          password: ValidationItem(value: value, error: "La contraseña debe de ser de almenos 6 caracteres")
+        password: ValidationItem(value: value, error: "La contraseña debe tener al menos 6 caracteres"),
       );
     }
+
     notifyListeners();
   }
 
-  changeConfirmPassword(String value){
+  changeConfirmPassword(String value) {
     _responsecontroller.add(Init());
 
     if (value.length >= 6) {
+      if (_state.password.value.isNotEmpty &&
+          _state.password.value != value) {
+        _state = _state.copyWith(
+          confirmPassword: ValidationItem(
+            value: value,
+            error: 'Las contraseñas no coinciden',
+          ),
+        );
+      } else {
+        _state = _state.copyWith(
+          confirmPassword: ValidationItem(value: value, error: ''),
+        );
+      }
+    } else {
       _state = _state.copyWith(
-          confirmPassword: ValidationItem(value: value, error: '')
-      );
-    }else{
-      _state = _state.copyWith(
-          confirmPassword: ValidationItem(value: value, error: "La contraseña debe de ser de almenos 6 caracteres")
+        confirmPassword: ValidationItem(
+          value: value,
+          error: "La contraseña debe tener al menos 6 caracteres",
+        ),
       );
     }
+
     notifyListeners();
   }
+
 }

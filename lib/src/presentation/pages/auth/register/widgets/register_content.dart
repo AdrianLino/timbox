@@ -45,12 +45,8 @@ class RegisterContent extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image.asset(
-                        'assets/img/gamepad.png',
-                        width: 150,
-                        height: 100,
-                      ),
-                      Text("Games Firebase",
+
+                      Text("Continua con tu registro",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold
@@ -63,25 +59,10 @@ class RegisterContent extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: 120,),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start ,
               children: [
-                Text(
-                  'Continua con tu',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-                Text(
-                  'Registro',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                  ),
-                ),
-
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(top: 50),
