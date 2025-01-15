@@ -3,13 +3,15 @@ class ArchivosData {
   final int idPersona;
   final String nombre;
   final String extension;
-  final int fechaCreacion;
+  final String link;
+  final String fechaCreacion;
 
   ArchivosData({
     required this.id,
     required this.idPersona,
     required this.nombre,
     required this.extension,
+    required this.link,
     required this.fechaCreacion,
   });
 
@@ -20,6 +22,7 @@ class ArchivosData {
       idPersona: json['id_persona'],
       nombre: json['nombre'],
       extension: json['extension'],
+      link: json['link'],
       fechaCreacion: json['fecha_creacion'],
     );
   }
@@ -31,6 +34,7 @@ class ArchivosData {
       'id_persona': idPersona,
       'nombre': nombre,
       'extension': extension,
+      'link': link,
       'fecha_creacion': fechaCreacion,
     };
   }

@@ -54,8 +54,8 @@ class _LoginPageState extends State<LoginPage> {
 
               if (response is Success) {
                 final token = response.data["token"];
-                context.read<AuthViewModel>().login(token);
-
+                final userId = response.data["user"]["id"];
+                context.read<AuthViewModel>().login(token, userId);
                 // Navegación diferida con validación de montaje
                 Future.microtask(() {
                   if (mounted) {

@@ -8,9 +8,6 @@ import '../../utils/base_color.dart';
 // Controlador principal para el Layout
 // --------------------------------------------------
 class LayoutController extends GetxController {
-  // Elimina scaffoldKey si no es imprescindible
-  // final scaffoldKey = GlobalKey<ScaffoldState>();
-
   bool leftBarCondensed = false;
   void toggleLeftBarCondensed() {
     leftBarCondensed = !leftBarCondensed;
@@ -22,10 +19,10 @@ class LayoutController extends GetxController {
 // Layout principal con UN solo Scaffold
 // --------------------------------------------------
 class Layout extends StatelessWidget {
-  final Widget? child;
+  final Widget child;
   final LayoutController controller = Get.put(LayoutController());
 
-  Layout({super.key, this.child});
+  Layout({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +32,6 @@ class Layout extends StatelessWidget {
     return GetBuilder<LayoutController>(
       builder: (controller) {
         return Scaffold(
-          // key: controller.scaffoldKey, // Comenta si no es necesario
           appBar: isMobile
               ? AppBar(
             title: const Text("Mi App"),
@@ -43,33 +39,40 @@ class Layout extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  // Si quieres abrir endDrawer:
                   Scaffold.of(context).openEndDrawer();
-                  // O si realmente necesitas la key:
-                  // controller.scaffoldKey.currentState?.openEndDrawer();
                 },
               ),
             ],
           )
               : null,
-          drawer: isMobile ? const LeftBar(isCondensed: false) : null,
+          drawer: isMobile ? LeftBar(isCondensed: false) : null,
           endDrawer: const RightBar(),
           body: Row(
             children: [
               if (!isMobile)
                 LeftBar(isCondensed: controller.leftBarCondensed),
+              // En desktop, tenemos la barra a la izquierda
+              // y el contenido principal a la derecha
               Expanded(
                 child: Stack(
                   children: [
                     // Contenido con scroll
                     Positioned.fill(
                       child: SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: isMobile ? 0 : 60.0),
-                          child: child,
+                        // El contenido real lo metemos en un Column con tamaño mínimo
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // En desktop, el TopBar lo vamos a posicionar con un SizedBox
+                            if (!isMobile)
+                              const SizedBox(height: 60), // reservamos el espacio
+
+                            child, // Aquí va tu CargaArchivosPage, por ejemplo
+                          ],
                         ),
                       ),
                     ),
+
                     // TopBar fijo para escritorio
                     if (!isMobile)
                       const Positioned(
@@ -93,7 +96,7 @@ class Layout extends StatelessWidget {
 // --------------------------------------------------
 class LeftBar extends StatelessWidget {
   final bool isCondensed;
-  const LeftBar({super.key, this.isCondensed = false});
+  const LeftBar({Key? key, this.isCondensed = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +118,20 @@ class LeftBar extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: [
+                children: const [
+                  // Ejemplo de items de navegación
                   NavigationItem(
                     iconData: LucideIcons.home,
                     title: "Home",
                     route: "cargaArchivos",
-                    isCondensed: isCondensed,
+                    isCondensed: false,
                   ),
                   NavigationItem(
                     iconData: LucideIcons.baggageClaim,
                     title: "Colaborador",
                     route: "colaborador",
-                    isCondensed: isCondensed,
+                    isCondensed: false,
                   ),
-                  // Más items
                 ],
               ),
             ),
@@ -143,7 +146,7 @@ class LeftBar extends StatelessWidget {
 // RightBar
 // --------------------------------------------------
 class RightBar extends StatelessWidget {
-  const RightBar({super.key});
+  const RightBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +184,7 @@ class RightBar extends StatelessWidget {
 // TopBar (para escritorio)
 // --------------------------------------------------
 class TopBar extends StatelessWidget {
-  const TopBar({super.key});
+  const TopBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,12 +199,9 @@ class TopBar extends StatelessWidget {
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(Icons.settings, color: BASE_COLOR,),
+            icon: const Icon(Icons.settings, color: BASE_COLOR),
             onPressed: () {
-              // Si no usas scaffoldKey, abre endDrawer con:
               Scaffold.of(context).openEndDrawer();
-              // O, si tuvieras un globalKey:
-              // controller.scaffoldKey.currentState?.openEndDrawer();
             },
           ),
         ],
@@ -220,12 +220,12 @@ class NavigationItem extends StatefulWidget {
   final String route;
 
   const NavigationItem({
-    super.key,
+    Key? key,
     required this.iconData,
     required this.title,
     required this.route,
     this.isCondensed = false,
-  });
+  }) : super(key: key);
 
   @override
   State<NavigationItem> createState() => _NavigationItemState();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_page.dart';
+import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_page.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_guard.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_viewmodel.dart';
@@ -27,6 +29,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => authViewModel),
         ChangeNotifierProvider(create: (context) => LoginViewModel(locator<AuthUseCases>())),
         ChangeNotifierProvider(create: (context) => RegisterViewModel(locator<AuthUseCases>())),
+        ChangeNotifierProvider(create: (context) => ArchivosViewModel(locator<ArchivoUseCases>())),
+
       ],
       child: const MyApp(),
     ),

@@ -12,7 +12,10 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:timbox/src/di/app_module.dart' as _i940;
 import 'package:timbox/src/di/firebase_service.dart' as _i794;
+import 'package:timbox/src/domain/repository/archivo_repository.dart' as _i935;
 import 'package:timbox/src/domain/repository/auth_repository.dart' as _i348;
+import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart'
+    as _i595;
 import 'package:timbox/src/domain/use_cases/auth/auth_usecases.dart' as _i710;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -32,7 +35,9 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i348.AuthRepository>(() => appModule.authRepository);
+    gh.factory<_i935.ArchivoRepository>(() => appModule.archivoRepository);
     gh.factory<_i710.AuthUseCases>(() => appModule.authUseCases);
+    gh.factory<_i595.ArchivoUseCases>(() => appModule.archivoUseCases);
     return this;
   }
 }

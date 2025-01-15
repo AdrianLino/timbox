@@ -1,8 +1,13 @@
 
 import 'package:injectable/injectable.dart';
+import 'package:timbox/src/data/repository/archivo_repository_impl.dart';
+import 'package:timbox/src/domain/repository/archivo_repository.dart';
+import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart';
 
 import '../data/repository/auth_repository_impl.dart';
 import '../domain/repository/auth_repository.dart';
+import '../domain/use_cases/archivo/obtener_archivo_usecase.dart';
+import '../domain/use_cases/archivo/subir_archivo_usecases.dart';
 import '../domain/use_cases/auth/auth_usecases.dart';
 import '../domain/use_cases/auth/login_usecases.dart';
 import '../domain/use_cases/auth/register_usercases.dart';
@@ -20,6 +25,9 @@ abstract class AppModule {
   @injectable
   AuthRepository get authRepository => AuthRepositoryImpl();
 
+  @injectable
+  ArchivoRepository get archivoRepository => ArchivoRepositoryImpl();
+
 
 
   @injectable
@@ -28,6 +36,14 @@ abstract class AppModule {
     login: LogininUseCase(authRepository),
     register: RegisterUseCase(authRepository),
 
+
+  );
+
+  @injectable
+  ArchivoUseCases get archivoUseCases => ArchivoUseCases(
+
+      subirArchivo: SubirArchivoUseCase(archivoRepository),
+      obtenerArchivo: ObtenerArchivoUseCase(archivoRepository)
 
   );
 

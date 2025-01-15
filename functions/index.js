@@ -162,5 +162,85 @@ app.post("/login", async (req, res) => {
 
 
 
+// 1. Listar todos los archivos
+app.get("/files", async (req, res) => {
+  try {
+    const userId = parseInt(req.query.userId, 10);
+    if (!userId) {
+      return res.status(400).json({ error: "userId (id_persona) es requerido." });
+    }
+
+    const sql = "SELECT * FROM Archivos WHERE id_persona = ?";
+    const results = await query(sql, [userId]);
+
+    return res.status(200).json(results);
+  } catch (error) {
+    console.error("Error al obtener archivos:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+// 2. Crear un nuevo registro de archivo
+app.post("/files", async (req, res) => {
+  try {
+    const { id_persona, nombre, extension, link } = req.body;
+
+    // Validar campos
+    if (!id_persona || !nombre || !extension || !link) {
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son requeridos (id_persona, nombre, extension, link)" });
+    }
+
+    const insertQuery = `
+      INSERT INTO Archivos (id_persona, nombre, extension, link)
+      VALUES (?, ?, ?, ?)
+    `;
+    await query(insertQuery, [id_persona, nombre, extension, link]);
+
+    res.status(201).json({ message: "Archivo registrado con éxito" });
+  } catch (error) {
+    console.error("Error al registrar archivo:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+// 3. Editar el nombre de un archivo
+app.patch("/files/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre } = req.body;
+
+    if (!nombre) {
+      return res.status(400).json({ error: "El nombre es requerido para actualizar." });
+    }
+
+    const updateQuery = `UPDATE Archivos SET nombre = ? WHERE id = ?`;
+    await query(updateQuery, [nombre, id]);
+
+    res.status(200).json({ message: "Nombre del archivo actualizado con éxito" });
+  } catch (error) {
+    console.error("Error al actualizar archivo:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+// 4. Eliminar un archivo
+app.delete("/files/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleteQuery = `DELETE FROM Archivos WHERE id = ?`;
+    await query(deleteQuery, [id]);
+
+    res.status(200).json({ message: "Archivo eliminado con éxito" });
+  } catch (error) {
+    console.error("Error al eliminar archivo:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+
+
 // Exportar la API
 exports.api = functions.https.onRequest(app);
