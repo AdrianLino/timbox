@@ -24,20 +24,20 @@ class DefaultTextField extends StatelessWidget {
         label: Text(
           label,
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
         labelStyle: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
         ),
         errorText: error,
         suffixIcon: Icon(
           icon,
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
       style: TextStyle(
-        color: Colors.white,
+        color: Colors.black,
       ),
       obscureText: obscureText,
     );

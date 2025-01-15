@@ -29,7 +29,9 @@ class _LoginPageState extends State<LoginPage> {
 
               if (response is Loading) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(BASE_COLOR),
+                  ),
                 );
               }
 
