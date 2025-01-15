@@ -1,6 +1,6 @@
 
-import 'package:study/helpers/utils/my_string_utils.dart';
-import 'package:study/helpers/widgets/my_field_validator.dart';
+import '../utils/my_string_utils.dart';
+import 'my_field_validator.dart';
 
 class MyEmailValidator extends MyFieldValidatorRule<String> {
   @override

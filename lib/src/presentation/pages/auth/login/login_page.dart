@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Navegación diferida con validación de montaje
                 Future.microtask(() {
                   if (mounted) {
-                    Navigator.pushReplacementNamed(context, 'prueba');
+                    Navigator.pushReplacementNamed(context, 'cargaArchivos');
                   }
                 });
               }

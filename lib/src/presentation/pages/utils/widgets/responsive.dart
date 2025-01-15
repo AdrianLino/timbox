@@ -1,6 +1,5 @@
 
-
-import 'package:study/helpers/widgets/my_screen_media.dart';
+import 'my_screen_media.dart';
 
 export 'my_display_type.dart';
 export 'my_screen_media.dart';

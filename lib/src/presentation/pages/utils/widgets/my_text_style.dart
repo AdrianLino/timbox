@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:study/helpers/theme/app_style.dart';
+import '../theme/app_style.dart';
 
 
 enum MyTextType {

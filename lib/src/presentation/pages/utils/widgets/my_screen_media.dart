@@ -1,6 +1,6 @@
 
-import 'package:study/helpers/widgets/my_display_type.dart';
-import 'package:study/helpers/widgets/my_screen_media_type.dart';
+import 'my_display_type.dart';
+import 'my_screen_media_type.dart';
 
 class MyScreenMedia {
   static int flexColumns = 12;
