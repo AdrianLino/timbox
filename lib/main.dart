@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timbox/src/presentation/pages/auth/home/prueba/prueba_page.dart';
+import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_page.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_guard.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_viewmodel.dart';
 import 'package:toastification/toastification.dart'; // Importa Toastification
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
             routes: {
               'login': (context) => LoginPage(),
               'register': (context) => RegisterPage(),
-              'prueba': (context) => AuthGuard(child: PruebaPage()),
+              'cargaArchivos': (context) => AuthGuard(child: CargaArchivosPage()),
             },
           );
         },

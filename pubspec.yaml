@@ -45,6 +45,12 @@ dependencies:
   flutter_custom_clippers: ^2.1.0
   shared_preferences: ^2.3.5
 
+  #admin
+  google_fonts: ^6.2.1
+  get: ^4.6.6
+  lucide_icons: ^0.257.0
+  url_launcher: ^6.3.0
+
 
 dev_dependencies:
   flutter_test:
