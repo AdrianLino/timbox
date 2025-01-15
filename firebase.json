@@ -1,0 +1,37 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "timbox-17743",
+          "appId": "1:883458926805:android:7628ae8c91059600785a5c",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "timbox-17743",
+          "configurations": {
+            "android": "1:883458926805:android:7628ae8c91059600785a5c",
+            "ios": "1:883458926805:ios:0b542b1a4b1d797c785a5c",
+            "web": "1:883458926805:web:9b4c33fc047c05da785a5c",
+            "windows": "1:883458926805:web:0f12ad26a2e339c7785a5c"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

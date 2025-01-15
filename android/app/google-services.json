@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "883458926805",
+    "project_id": "timbox-17743",
+    "storage_bucket": "timbox-17743.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883458926805:android:7628ae8c91059600785a5c",
+        "android_client_info": {
+          "package_name": "com.example.timbox"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHm6-5aueTBn36dDY8cUzzUrtr74eQVdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
