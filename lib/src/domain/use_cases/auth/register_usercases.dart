@@ -8,5 +8,5 @@ class RegisterUseCase{
 
   RegisterUseCase(this._repository);
 
-  launch(PersonasData user) => _repository.register(user);
+  launch({ required PersonasData user}) => _repository.register(user);
 }

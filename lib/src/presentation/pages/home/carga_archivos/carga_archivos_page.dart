@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../domain/models/archivos_data.dart';
 import 'carga_archivos_viewmodel.dart';
 import '../layouts/layout.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CargaArchivosPage extends StatefulWidget {
   const CargaArchivosPage({Key? key}) : super(key: key);
@@ -37,12 +38,49 @@ class _CargaArchivosPageState extends State<CargaArchivosPage> {
 
   Future<void> _subirArchivo() async {
     try {
-      await _viewModel.subirArchivo();
-      await _cargarArchivos();
+      final controller = TextEditingController();
+
+      // Importante: usar showDialog para mostrar el AlertDialog
+      await showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text("Nombre del archivo"),
+            content: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                labelText: "Ingresa un nombre para el archivo",
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancelar"),
+                onPressed: () => Navigator.of(ctx).pop(),
+              ),
+              TextButton(
+                child: const Text("Guardar"),
+                onPressed: () async {
+                  final nuevoNombre = controller.text.trim();
+                  if (nuevoNombre.isNotEmpty) {
+                    // Llamas la función del ViewModel
+                    await _viewModel.subirArchivo(nuevoNombre);
+                    // Recargas la tabla
+                    await _cargarArchivos();
+                  }
+                  // Cierra el diálogo
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } catch (e) {
       debugPrint("Error al subir archivo: $e");
     }
   }
+
+
 
   Future<void> _eliminarArchivo(ArchivosData archivo) async {
     try {
@@ -94,8 +132,15 @@ class _CargaArchivosPageState extends State<CargaArchivosPage> {
     );
   }
 
-  void _descargarArchivo(ArchivosData archivo) {
-    debugPrint("Descargando desde: ${archivo.link}");
+  void _descargarArchivo(ArchivosData archivo) async{
+    final url = archivo.link;
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+    // Abre el enlace en el navegador o visor correspondiente
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+    debugPrint("No se pudo abrir la URL: $url");
+    }
   }
 
   @override
@@ -109,7 +154,9 @@ class _CargaArchivosPageState extends State<CargaArchivosPage> {
             child: ElevatedButton.icon(
               icon: const Icon(Icons.upload_file),
               label: const Text("Subir Archivo"),
-              onPressed: _subirArchivo,
+              onPressed:() {
+                _subirArchivo();
+              },
             ),
           ),
 

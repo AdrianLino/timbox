@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart';
+import 'package:timbox/src/domain/use_cases/colaborador/colaborador_usecases.dart';
+import 'package:timbox/src/presentation/pages/auth/register/register_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_page.dart';
+import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_guard.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_viewmodel.dart';
 import 'package:toastification/toastification.dart'; // Importa Toastification
 import 'package:timbox/src/domain/use_cases/auth/auth_usecases.dart';
 import 'package:timbox/src/presentation/pages/auth/login/login_page.dart';
 import 'package:timbox/src/presentation/pages/auth/login/login_viewmodel.dart';
-import 'package:timbox/src/presentation/pages/auth/register/register_page.dart';
 import 'package:timbox/src/presentation/pages/auth/register/register_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'injection.dart';
@@ -30,6 +32,8 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LoginViewModel(locator<AuthUseCases>())),
         ChangeNotifierProvider(create: (context) => RegisterViewModel(locator<AuthUseCases>())),
         ChangeNotifierProvider(create: (context) => ArchivosViewModel(locator<ArchivoUseCases>())),
+        ChangeNotifierProvider(create: (context) => ColaboradorViewModel(locator<ColaboradorUseCases>())),
+
 
       ],
       child: const MyApp(),

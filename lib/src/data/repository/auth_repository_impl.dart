@@ -26,10 +26,8 @@ class AuthRepositoryImpl implements AuthRepository {
         // Intentar decodificar solo si es JSON válido
         if (response.headers['content-type']?.contains('application/json') ?? false) {
           final data = json.decode(response.body);
-          print('Inicio de sesión exitoso: $data');
           return Success(data);
         } else {
-          print('Respuesta no JSON: ${response.body}');
           return Error("Respuesta no válida del servidor.");
         }
       } else {
@@ -38,7 +36,6 @@ class AuthRepositoryImpl implements AuthRepository {
         return Error(error["error"] ?? "Error desconocido");
       }
     } catch (e) {
-      print('Error al conectar con el servidor: $e');
       return Error("Error al conectar con el servidor: $e");
     }
 
@@ -55,15 +52,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
-        print('si se pudo $data');
         return Success(data);
       } else {
         final error = json.decode(response.body);
-        print('no se que paso ${error["error"]}');
         return Error(error["error"] ?? "Error desconocido");
       }
     } catch (e) {
-      print('errorrrrrrrrrrrr' + e.toString());
       return Error("Error al conectar con el servidor: $e");
     }
   }

@@ -28,8 +28,6 @@ class LoginViewModel extends ChangeNotifier{
 
 
 
-  // seters
-
   void login() async{
     if(state.isValid()){
       _responsecontroller.add(Loading()); //esperando la respuesta

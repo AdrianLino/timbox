@@ -16,7 +16,7 @@ class ArchivosViewModel extends ChangeNotifier{
 
 
 
-    Future<Resource> subirArchivo() async{
+    Future<Resource> subirArchivo(String nombre) async{
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
@@ -30,7 +30,7 @@ class ArchivosViewModel extends ChangeNotifier{
     final data = await archivoUseCases.subirArchivo.launch(
         idPersona: savedUserId,
         result: result,
-        nombreArchivo: 'Roberto'
+        nombreArchivo: nombre
     );
     return Success('data');
   }

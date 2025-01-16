@@ -1,6 +1,5 @@
 
 class ColaboradorData {
-  final int id;
   final int idPersona;
   final String nombre;
   final String correo;
@@ -15,10 +14,9 @@ class ColaboradorData {
   final String salarioDiario;
   final String salario;
   final String claveEntidad;
-  final String estado;
+  final int estado;
 
   ColaboradorData({
-    required this.id,
     required this.idPersona,
     required this.nombre,
     required this.correo,
@@ -39,7 +37,6 @@ class ColaboradorData {
   // Para convertir datos de MySQL a un objeto DetallePersonal
   factory ColaboradorData.fromJson(Map<String, dynamic> json) {
     return ColaboradorData(
-      id: json['id'],
       idPersona: json['id_persona'],
       nombre: json['nombre'],
       correo: json['correo'],
@@ -61,7 +58,6 @@ class ColaboradorData {
   // Para convertir un objeto DetallePersonal a JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'id_persona': idPersona,
       'nombre': nombre,
       'correo': correo,

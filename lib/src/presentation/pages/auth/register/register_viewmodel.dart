@@ -25,8 +25,8 @@ class RegisterViewModel extends ChangeNotifier{
   register() async{
     if (_state.isValid()) {
       _responsecontroller.add(Loading()); //esperando la respuesta
-      final data =await _authUseCases.register.launch(
-          _state.toUser()
+      final data =await _authUseCases.register.launch(user:
+      _state.toUser()
       );
       _responsecontroller.add(data);
 

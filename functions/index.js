@@ -242,5 +242,138 @@ app.delete("/files/:id", async (req, res) => {
 
 
 
+app.post("/colaboradorRegister", async (req, res) => {
+  try {
+    console.log("Inicio del proceso de registro de colaborador.");
+    // Extraer campos del body (mismos nombres que en colaborador.toJson())
+    const {
+      id_persona,
+      nombre,
+      correo,
+      rfc,
+      domicilio_fiscal,
+      curp,
+      n_seguridad_social,
+      fecha_inicio,
+      tipo_contrato,
+      departamento,
+      puesto,
+      salario_d,
+      salario,
+      clave_entidad,
+      estado,
+    } = req.body;
+
+    console.log("Datos recibidos del cliente:", req.body);
+
+    // Validar que existan todos los campos requeridos
+    if (
+      !id_persona ||
+      !nombre ||
+      !correo ||
+      !rfc ||
+      !domicilio_fiscal ||
+      !curp ||
+      !n_seguridad_social ||
+      !fecha_inicio ||
+      !tipo_contrato ||
+      !departamento ||
+      !puesto ||
+      !salario_d ||
+      !salario ||
+      !clave_entidad ||
+      typeof estado === "undefined"
+    ) {
+      console.log("Error: Faltan campos requeridos.");
+      return res.status(400).json({ error: "Todos los campos son requeridos." });
+    }
+    console.log("Validación de campos requerida completada.");
+
+    // Verificar si correo ya existe
+    console.log("Verificando si el correo ya está registrado...");
+    const emailQuery = `SELECT * FROM DetallesPersonales WHERE correo = ?`;
+    const emailExists = await query(emailQuery, [correo]);
+    if (emailExists.length > 0) {
+      console.log("Error: El correo ya está registrado.");
+      return res.status(400).json({ error: "El correo ya está registrado." });
+    }
+    console.log("Verificación de correo completada.");
+
+    // Verificar si RFC ya existe
+    console.log("Verificando si el RFC ya está registrado...");
+    const rfcQuery = `SELECT * FROM DetallesPersonales WHERE rfc = ?`;
+    const rfcExists = await query(rfcQuery, [rfc]);
+    if (rfcExists.length > 0) {
+      console.log("Error: El RFC ya está registrado.");
+      return res.status(400).json({ error: "El RFC ya está registrado." });
+    }
+    console.log("Verificación de RFC completada.");
+
+    // Verificar si CURP ya existe
+    console.log("Verificando si la CURP ya está registrada...");
+    const curpQuery = `SELECT * FROM DetallesPersonales WHERE curp = ?`;
+    const curpExists = await query(curpQuery, [curp]);
+    if (curpExists.length > 0) {
+      console.log("Error: La CURP ya está registrada.");
+      return res.status(400).json({ error: "La CURP ya está registrada." });
+    }
+    console.log("Verificación de CURP completada.");
+
+    // Insertar el colaborador en la base de datos
+    console.log("Insertando colaborador en la base de datos...");
+    const insertQuery = `
+      INSERT INTO DetallesPersonales (
+        id_persona,
+        nombre,
+        correo,
+        rfc,
+        domicilio_fiscal,
+        curp,
+        n_seguridad_social,
+        fecha_inicio,
+        tipo_contrato,
+        departamento,
+        puesto,
+        salario_d,
+        salario,
+        clave_entidad,
+        id_estado
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const results = await query(insertQuery, [
+      id_persona,
+      nombre,
+      correo,
+      rfc,
+      domicilio_fiscal,
+      curp,
+      n_seguridad_social,
+      fecha_inicio, // Debe ser compatible con el formato DATE/DATETIME en MySQL
+      tipo_contrato,
+      departamento,
+      puesto,
+      salario_d,
+      salario,
+      clave_entidad,
+      estado,
+    ]);
+    console.log("Colaborador insertado exitosamente. ID generado:", results.insertId);
+
+
+    res.status(201).json({
+      message: "Colaborador registrado con éxito",
+    });
+  } catch (error) {
+    console.error("Error al registrar el colaborador:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+
+
+
+
 // Exportar la API
 exports.api = functions.https.onRequest(app);
