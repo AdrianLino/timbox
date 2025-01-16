@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart';
 import 'package:timbox/src/domain/use_cases/colaborador/colaborador_usecases.dart';
+import 'package:timbox/src/domain/use_cases/post/post_usecases.dart';
 import 'package:timbox/src/presentation/pages/auth/register/register_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_viewmodel.dart';
@@ -10,6 +11,7 @@ import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_viewm
 import 'package:timbox/src/presentation/pages/home/empleados/empleados_page.dart';
 import 'package:timbox/src/presentation/pages/home/empleados/empleados_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/home/servicios/servicios_page.dart';
+import 'package:timbox/src/presentation/pages/home/servicios/servicios_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_guard.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_viewmodel.dart';
 import 'package:toastification/toastification.dart'; // Importa Toastification
@@ -37,6 +39,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ArchivosViewModel(locator<ArchivoUseCases>())),
         ChangeNotifierProvider(create: (context) => ColaboradorViewModel(locator<ColaboradorUseCases>())),
         ChangeNotifierProvider(create: (context) => EmpleadosViewmodel(locator<ColaboradorUseCases>())),
+        ChangeNotifierProvider(create: (context) => ServiciosViewmodel(locator<PostUseCases>())),
 
 
       ],

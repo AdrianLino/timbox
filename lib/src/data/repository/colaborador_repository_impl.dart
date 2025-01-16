@@ -59,7 +59,6 @@ class ColaboradorRepositoryImpl extends ColaboradorRepository {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print('Archivos obtenidos con éxito');
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => ColaboradorData.fromJson(json)).toList();
     } else {
