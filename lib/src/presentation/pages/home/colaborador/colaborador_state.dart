@@ -54,7 +54,7 @@ class ColaboradorState {
     salarioDiario: this.salarioD.value,
     salario: this.salario.value,
     claveEntidad: this.claveEntidad.value,
-    estado: this.estado,
+    id_estado: this.estado,
   );
 
 

@@ -15,7 +15,7 @@ class ColaboradorData {
   final String salarioDiario;
   final String salario;
   final String claveEntidad;
-  final int estado;
+  final int id_estado;
 
   ColaboradorData({
     this.id = 0,
@@ -33,7 +33,7 @@ class ColaboradorData {
     this.salarioDiario = '',
     this.salario = '',
     this.claveEntidad = '',
-    this.estado = 0,
+    this.id_estado = 0,
   }) : fechaInicio = fechaInicio ?? DateTime.now();
 
 
@@ -57,7 +57,7 @@ class ColaboradorData {
       salarioDiario: json['salario_d'] ?? '',
       salario: json['salario'] ?? '',
       claveEntidad: json['clave_entidad'] ?? '',
-      estado: json['id_estado'] ?? 0,
+      id_estado: json['id_estado'] ?? 0,
       // ^^^^^^^^^^^^^^^^^^^^^
       // Mapea la columna 'id_estado' de tu DB a la propiedad 'estado' de tu modelo
     );
@@ -79,7 +79,7 @@ class ColaboradorData {
       'salario_d': salarioDiario,
       'salario': salario,
       'clave_entidad': claveEntidad,
-      'id_estado': estado,
+      'id_estado': id_estado,
       // ^^^^^^^^^^^^^^^^^
       // Aquí la propiedad 'estado' del modelo se enviará como 'id_estado' al backend
     };

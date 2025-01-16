@@ -261,7 +261,7 @@ app.post("/colaboradorRegister", async (req, res) => {
       salario_d,
       salario,
       clave_entidad,
-      estado,
+      id_estado,
     } = req.body;
 
     console.log("Datos recibidos del cliente:", req.body);
@@ -282,7 +282,7 @@ app.post("/colaboradorRegister", async (req, res) => {
       !salario_d ||
       !salario ||
       !clave_entidad ||
-      typeof estado === "undefined"
+      !id_estado
     ) {
       console.log("Error: Faltan campos requeridos.");
       return res.status(400).json({ error: "Todos los campos son requeridos." });
@@ -357,7 +357,7 @@ app.post("/colaboradorRegister", async (req, res) => {
       salario_d,
       salario,
       clave_entidad,
-      estado,
+      id_estado,
     ]);
     console.log("Colaborador insertado exitosamente. ID generado:", results.insertId);
 
