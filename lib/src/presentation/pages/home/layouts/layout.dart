@@ -138,6 +138,12 @@ class LeftBar extends StatelessWidget {
                     route: "empleados",
                     isCondensed: false,
                   ),
+                  NavigationItem(
+                    iconData: LucideIcons.archive,
+                    title: "Servicios",
+                    route: "servicios",
+                    isCondensed: false,
+                  ),
                 ],
               ),
             ),

@@ -73,19 +73,27 @@ class ColaboradorRepositoryImpl extends ColaboradorRepository {
 
 
   @override
-  Future<void> updateColaborador(int colaboradorId, ColaboradorData colaborador) async {
-    final url = Uri.parse("$baseUrl/colaboradorUpdate/$colaboradorId");
-    final bodyToUpdate = colaborador.toJson();
-    // OJO: Podrías remover campos que no se actualizan.
+  Future<void> updateColaborador(
+      int colaboradorId, ColaboradorData colaborador) async {
+    final url = Uri.parse(
+        "$baseUrl/colaboradorUpdate/$colaboradorId");
 
-    final response = await http.put(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(bodyToUpdate),
-    );
+    try {
+      final response = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(colaborador.toJson()),
+      );
 
-    if (response.statusCode != 200) {
-      throw Exception("Error al actualizar colaborador: ${response.body}");
+      if (response.statusCode == 200) {
+        print("Colaborador actualizado con éxito.");
+      } else {
+        final error = json.decode(response.body);
+        throw Exception("Error al actualizar: ${error['error']}");
+      }
+    } catch (e) {
+      print("Error al actualizar colaborador: $e");
+      rethrow;
     }
   }
 

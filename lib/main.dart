@@ -9,6 +9,7 @@ import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_page.
 import 'package:timbox/src/presentation/pages/home/colaborador/colaborador_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/home/empleados/empleados_page.dart';
 import 'package:timbox/src/presentation/pages/home/empleados/empleados_viewmodel.dart';
+import 'package:timbox/src/presentation/pages/home/servicios/servicios_page.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_guard.dart';
 import 'package:timbox/src/presentation/pages/utils/auth_viewmodel.dart';
 import 'package:toastification/toastification.dart'; // Importa Toastification
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
               'cargaArchivos': (context) => AuthGuard(child: CargaArchivosPage()),
               'colaborador': (context) => AuthGuard(child: ColaboradorPage()),
               'empleados': (context) => AuthGuard(child: EmpleadosPage()),
+              'servicios': (context) => AuthGuard(child: ServiciosPage()),
             },
           );
         },

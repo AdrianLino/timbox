@@ -1,141 +1,185 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../domain/models/archivos_data.dart';
+import 'package:timbox/src/presentation/pages/home/empleados/widget/empleado_content.dart';
+import 'package:timbox/src/presentation/pages/home/empleados/widget/empleado_editar.dart';
 import '../../../../domain/models/colaborador_data.dart';
 import '../layouts/layout.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'empleados_viewmodel.dart';
 
 class EmpleadosPage extends StatefulWidget {
   const EmpleadosPage({Key? key}) : super(key: key);
 
   @override
-  _CargaArchivosPageState createState() => _CargaArchivosPageState();
+  State<EmpleadosPage> createState() => _EmpleadosPageState();
 }
 
-class _CargaArchivosPageState extends State<EmpleadosPage> {
+class _EmpleadosPageState extends State<EmpleadosPage> {
   late EmpleadosViewmodel _viewModel;
-  List<ColaboradorData> _archivos = [];
+
+  /// Lista completa de colaboradores cargados.
+  List<ColaboradorData> _colaboradores = [];
+
+  /// Controlador de texto para buscar por nombre, RFC, CURP.
+  final TextEditingController _searchController = TextEditingController();
+
+  /// Fecha seleccionada para filtrar por fecha de inicio (null => sin filtro).
+  DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<EmpleadosViewmodel>(context, listen: false);
-    _cargarArchivos();
+    _cargarColaboradores();
   }
 
-
-
-  Future<void> _cargarArchivos() async {
+  /// Llama al ViewModel para cargar la lista de colaboradores.
+  Future<void> _cargarColaboradores() async {
     try {
-      final listaArchivos = await _viewModel.obtenerArchivos();
+      final lista = await _viewModel.obtenerArchivos();
       setState(() {
-        _archivos = listaArchivos;
+        _colaboradores = lista;
       });
     } catch (e) {
-      debugPrint("Error al cargar archivos: $e");
+      debugPrint("Error al cargar colaboradores: $e");
     }
   }
 
+  /// Aplica los filtros locales: texto (nombre, rfc, curp) y fecha.
+  List<ColaboradorData> _aplicarFiltros() {
+    final query = _searchController.text.trim().toLowerCase();
+    final dateFilter = _selectedDate;
 
+    return _colaboradores.where((col) {
+      // Coincidencia con texto
+      final matchQuery = col.nombre.toLowerCase().contains(query) ||
+          col.rfc.toLowerCase().contains(query) ||
+          col.curp.toLowerCase().contains(query);
 
+      // Coincidencia con fecha (día/mes/año)
+      bool matchDate = true;
+      if (dateFilter != null) {
+        final fechaCol = col.fechaInicio;
+        matchDate = (fechaCol.year == dateFilter.year &&
+            fechaCol.month == dateFilter.month &&
+            fechaCol.day == dateFilter.day);
+      }
 
-  Future<void> _eliminarArchivo(ColaboradorData archivo) async {
-    try {
-      /*final ok = await _viewModel.eliminarArchivo(archivo.id);
-      if (ok) {
-        await _cargarArchivos();
-      }*/
-    } catch (e) {
-      debugPrint("Error al eliminar archivo: $e");
-    }
+      return matchQuery && matchDate;
+    }).toList();
   }
-
-  Future<void> _editarNombre(ColaboradorData archivo) async {
-    final controller = TextEditingController(text: archivo.nombre);
-    await showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text("Editar nombre"),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(labelText: "Nuevo nombre"),
-          ),
-          actions: [
-            TextButton(
-              child: const Text("Cancelar"),
-              onPressed: () => Navigator.of(ctx).pop(),
-            ),
-            TextButton(
-              child: const Text("Guardar"),
-              onPressed: () async {
-                final nuevoNombre = controller.text.trim();
-                if (nuevoNombre.isNotEmpty) {
-                  try {
-                    /*final ok = await _viewModel.editarNombreArchivo(archivo.id, nuevoNombre);
-                    if (ok) {
-                      await _cargarArchivos();
-                    }*/
-                  } catch (e) {
-                    debugPrint("Error al editar nombre: $e");
-                  }
-                }
-                Navigator.of(ctx).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
     return Layout(
-      child: Column(
-        children: [
-          // Tabla con los archivos
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: const [
-                DataColumn(label: Text("Nombre")),
-                DataColumn(label: Text("curp")),
-                DataColumn(label: Text("rfc")),
-                DataColumn(label: Text("Fecha de inicio")),
-                DataColumn(label: Text("Acciones")),
-              ],
-              rows: _archivos.map((archivo) {
-                return DataRow(
-                  cells: [
-                    DataCell(Text(archivo.nombre)),
-                    DataCell(Text(archivo.curp)),
-                    DataCell(Text(archivo.rfc)),
-                    DataCell(Text(archivo.fechaInicio.toString())),
-                    DataCell(
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () => _editarNombre(archivo),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => _eliminarArchivo(archivo),
-                          ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Buscador
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    labelText: "Buscar (Nombre, RFC, CURP)",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
 
-                        ],
-                      ),
+              // Filtro por Fecha
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            _selectedDate = picked;
+                          });
+                        }
+                      },
+                      child: const Text("Filtrar Fecha"),
                     ),
+                    if (_selectedDate != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _selectedDate = null;
+                            });
+                          },
+                        ),
+                      ),
                   ],
-                );
-              }).toList(),
-            ),
+                ),
+              ),
+
+              // Tabla con scroll horizontal
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Text("Nombre")),
+                    DataColumn(label: Text("CURP")),
+                    DataColumn(label: Text("RFC")),
+                    DataColumn(label: Text("Fecha de inicio")),
+                    DataColumn(label: Text("Acciones")),
+                  ],
+                  rows: _aplicarFiltros().map((col) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(col.nombre)),
+                        DataCell(Text(col.curp)),
+                        DataCell(Text(col.rfc)),
+                        DataCell(Text(col.fechaInicio.toString())),
+                        DataCell(
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  // Navegar a la página de edición
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EmpleadoContent(
+                                          _viewModel, col
+                                      ),
+                                    ),
+                                  );
+                                }
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _viewModel.deleteColaborador(col.id, context);
+                                }
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

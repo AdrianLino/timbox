@@ -396,7 +396,8 @@ app.get("/colaboradorList", async (req, res) => {
 app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
   try {
     const { colaboradorId } = req.params;
-    // Campos que se permitirán actualizar
+
+    // Validar campos requeridos
     const {
       nombre,
       correo,
@@ -411,10 +412,12 @@ app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
       salario_d,
       salario,
       clave_entidad,
+      id_estado,
     } = req.body;
 
-    // Opcional: podrías validar que NO existan duplicados en correo, RFC y CURP si cambia el valor
-    // (similar a lo que haces en el registro).
+    if (!nombre || !correo || !rfc) {
+      return res.status(400).json({ error: "Campos obligatorios faltantes." });
+    }
 
     const sql = `
       UPDATE DetallesPersonales
@@ -431,10 +434,11 @@ app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
         puesto = ?,
         salario_d = ?,
         salario = ?,
-        clave_entidad = ?
+        clave_entidad = ?,
+        id_estado = ?
       WHERE id = ?
-      AND id_estado = 1
     `;
+
     const result = await query(sql, [
       nombre,
       correo,
@@ -449,16 +453,17 @@ app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
       salario_d,
       salario,
       clave_entidad,
+      id_estado,
       colaboradorId,
     ]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "No se pudo actualizar, colaborador no encontrado." });
+      return res
+        .status(404)
+        .json({ error: "No se pudo actualizar, colaborador no encontrado." });
     }
 
-    res.status(200).json({
-      message: "Colaborador actualizado con éxito"
-    });
+    res.status(200).json({ message: "Colaborador actualizado con éxito" });
   } catch (error) {
     console.error("Error al actualizar el colaborador:", error.message);
     res.status(500).json({ error: "Error interno del servidor." });
@@ -467,27 +472,17 @@ app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
 
 
 
-// Eliminar lógicamente un colaborador
-app.delete("/colaboradorDelete/:colaboradorId", async (req, res) => {
+// Eliminar un colaborador
+app.delete("/colaboradorDelete/:id", async (req, res) => {
   try {
-    const { colaboradorId } = req.params;
+    const { id } = req.params;
 
-    const sql = `
-      UPDATE DetallesPersonales
-      SET id_estado = 0
-      WHERE id = ?
-    `;
-    const result = await query(sql, [colaboradorId]);
+    const deleteQuery = `DELETE FROM DetallesPersonales WHERE id = ?`;
+    await query(deleteQuery, [id]);
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "No se pudo eliminar, colaborador no encontrado." });
-    }
-
-    res.status(200).json({
-      message: "Colaborador eliminado (lógica) con éxito"
-    });
+    res.status(200).json({ message: "Archivo eliminado con éxito" });
   } catch (error) {
-    console.error("Error al eliminar el colaborador:", error.message);
+    console.error("Error al eliminar archivo:", error.message);
     res.status(500).json({ error: "Error interno del servidor." });
   }
 });
