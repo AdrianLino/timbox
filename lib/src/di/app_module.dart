@@ -14,7 +14,10 @@ import '../domain/use_cases/auth/auth_usecases.dart';
 import '../domain/use_cases/auth/login_usecases.dart';
 import '../domain/use_cases/auth/register_usercases.dart';
 import '../domain/use_cases/colaborador/colaborador_usecases.dart';
+import '../domain/use_cases/colaborador/delete_colaborador_usecase.dart';
+import '../domain/use_cases/colaborador/get_colaborador_usecase.dart';
 import '../domain/use_cases/colaborador/registerColaborador_usecase.dart';
+import '../domain/use_cases/colaborador/update_colaborador_usecase.dart';
 import 'firebase_service.dart';
 
 @module
@@ -52,7 +55,9 @@ abstract class AppModule {
   @injectable
   ColaboradorUseCases get colaboradorUseCases => ColaboradorUseCases(
     registerColaborador: RegisterColaboradorUseCase(colaboradorRepository),
-
+    updateColaborador: UpdateColaboradorUseCase(colaboradorRepository),
+    deleteColaborador: DeleteColaboradorUseCase(colaboradorRepository),
+    getColaborador: GetColaboradorUseCase(colaboradorRepository)
   );
 
 }

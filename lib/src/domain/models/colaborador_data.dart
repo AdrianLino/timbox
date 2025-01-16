@@ -1,5 +1,6 @@
 
 class ColaboradorData {
+  final int id;
   final int idPersona;
   final String nombre;
   final String correo;
@@ -17,45 +18,51 @@ class ColaboradorData {
   final int estado;
 
   ColaboradorData({
-    required this.idPersona,
-    required this.nombre,
-    required this.correo,
-    required this.rfc,
-    required this.domicilioFiscal,
-    required this.curp,
-    required this.nSeguridadSocial,
-    required this.fechaInicio,
-    required this.tipoContrato,
-    required this.departamento,
-    required this.puesto,
-    required this.salarioDiario,
-    required this.salario,
-    required this.claveEntidad,
-    required this.estado,
-  });
+    this.id = 0,
+    this.idPersona = 0,
+    this.nombre = '',
+    this.correo = '',
+    this.rfc = '',
+    this.domicilioFiscal = '',
+    this.curp = '',
+    this.nSeguridadSocial = '',
+    DateTime? fechaInicio,  // <-- Aceptamos null o un DateTime
+    this.tipoContrato = '',
+    this.departamento = '',
+    this.puesto = '',
+    this.salarioDiario = '',
+    this.salario = '',
+    this.claveEntidad = '',
+    this.estado = 0,
+  }) : fechaInicio = fechaInicio ?? DateTime.now();
 
-  // Para convertir datos de MySQL a un objeto DetallePersonal
+
+
   factory ColaboradorData.fromJson(Map<String, dynamic> json) {
     return ColaboradorData(
-      idPersona: json['id_persona'],
-      nombre: json['nombre'],
-      correo: json['correo'],
-      rfc: json['rfc'],
-      domicilioFiscal: json['domicilio_fiscal'],
-      curp: json['curp'],
-      nSeguridadSocial: json['n_seguridad_social'],
-      fechaInicio: DateTime.parse(json['fecha_inicio']),
-      tipoContrato: json['tipo_contrato'],
-      departamento: json['departamento'],
-      puesto: json['puesto'],
-      salarioDiario: json['salario_d'],
-      salario: json['salario'],
-      claveEntidad: json['clave_entidad'],
-      estado: json['estado'],
+      id: json['id'] ?? 0,
+      idPersona: json['id_persona'] ?? 0,
+      nombre: json['nombre'] ?? '',
+      correo: json['correo'] ?? '',
+      rfc: json['rfc'] ?? '',
+      domicilioFiscal: json['domicilio_fiscal'] ?? '',
+      curp: json['curp'] ?? '',
+      nSeguridadSocial: json['n_seguridad_social'] ?? '',
+      fechaInicio: (json['fecha_inicio'] == null)
+          ? DateTime.now()
+          : DateTime.parse(json['fecha_inicio']),
+      tipoContrato: json['tipo_contrato'] ?? '',
+      departamento: json['departamento'] ?? '',
+      puesto: json['puesto'] ?? '',
+      salarioDiario: json['salario_d'] ?? '',
+      salario: json['salario'] ?? '',
+      claveEntidad: json['clave_entidad'] ?? '',
+      estado: json['id_estado'] ?? 0,
+      // ^^^^^^^^^^^^^^^^^^^^^
+      // Mapea la columna 'id_estado' de tu DB a la propiedad 'estado' de tu modelo
     );
   }
 
-  // Para convertir un objeto DetallePersonal a JSON
   Map<String, dynamic> toJson() {
     return {
       'id_persona': idPersona,
@@ -72,7 +79,9 @@ class ColaboradorData {
       'salario_d': salarioDiario,
       'salario': salario,
       'clave_entidad': claveEntidad,
-      'estado': estado,
+      'id_estado': estado,
+      // ^^^^^^^^^^^^^^^^^
+      // Aquí la propiedad 'estado' del modelo se enviará como 'id_estado' al backend
     };
   }
 }

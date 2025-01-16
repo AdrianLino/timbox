@@ -374,6 +374,130 @@ app.post("/colaboradorRegister", async (req, res) => {
 
 
 
+app.get("/colaboradorList", async (req, res) => {
+  try {
+    const userId = parseInt(req.query.userId, 10);
+    if (!userId) {
+      return res.status(400).json({ error: "userId (id_persona) es requerido." });
+    }
+
+    const sql = "SELECT * FROM DetallesPersonales WHERE id_persona = ?";
+    const results = await query(sql, [userId]);
+
+    return res.status(200).json(results);
+  } catch (error) {
+    console.error("Error al obtener archivos:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+
+//actualizar un colaborador
+app.put("/colaboradorUpdate/:colaboradorId", async (req, res) => {
+  try {
+    const { colaboradorId } = req.params;
+    // Campos que se permitirán actualizar
+    const {
+      nombre,
+      correo,
+      rfc,
+      domicilio_fiscal,
+      curp,
+      n_seguridad_social,
+      fecha_inicio,
+      tipo_contrato,
+      departamento,
+      puesto,
+      salario_d,
+      salario,
+      clave_entidad,
+    } = req.body;
+
+    // Opcional: podrías validar que NO existan duplicados en correo, RFC y CURP si cambia el valor
+    // (similar a lo que haces en el registro).
+
+    const sql = `
+      UPDATE DetallesPersonales
+      SET
+        nombre = ?,
+        correo = ?,
+        rfc = ?,
+        domicilio_fiscal = ?,
+        curp = ?,
+        n_seguridad_social = ?,
+        fecha_inicio = ?,
+        tipo_contrato = ?,
+        departamento = ?,
+        puesto = ?,
+        salario_d = ?,
+        salario = ?,
+        clave_entidad = ?
+      WHERE id = ?
+      AND id_estado = 1
+    `;
+    const result = await query(sql, [
+      nombre,
+      correo,
+      rfc,
+      domicilio_fiscal,
+      curp,
+      n_seguridad_social,
+      fecha_inicio,
+      tipo_contrato,
+      departamento,
+      puesto,
+      salario_d,
+      salario,
+      clave_entidad,
+      colaboradorId,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "No se pudo actualizar, colaborador no encontrado." });
+    }
+
+    res.status(200).json({
+      message: "Colaborador actualizado con éxito"
+    });
+  } catch (error) {
+    console.error("Error al actualizar el colaborador:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+
+
+// Eliminar lógicamente un colaborador
+app.delete("/colaboradorDelete/:colaboradorId", async (req, res) => {
+  try {
+    const { colaboradorId } = req.params;
+
+    const sql = `
+      UPDATE DetallesPersonales
+      SET id_estado = 0
+      WHERE id = ?
+    `;
+    const result = await query(sql, [colaboradorId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "No se pudo eliminar, colaborador no encontrado." });
+    }
+
+    res.status(200).json({
+      message: "Colaborador eliminado (lógica) con éxito"
+    });
+  } catch (error) {
+    console.error("Error al eliminar el colaborador:", error.message);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+});
+
+
+
+
+
+
+
 
 // Exportar la API
 exports.api = functions.https.onRequest(app);

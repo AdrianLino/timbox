@@ -5,4 +5,8 @@ abstract class ColaboradorRepository {
 
   Future<Resource> colaboradorRegister(ColaboradorData colaborador);
 
+  Future<List<ColaboradorData>> getColaboradores(int idPersona);
+  Future<void> updateColaborador(int colaboradorId, ColaboradorData colaborador);
+  Future<void> deleteColaborador(int colaboradorId);
+
 }
