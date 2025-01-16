@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:timbox/src/domain/use_cases/archivo/archivo_usescases.dart';
 import 'package:timbox/src/domain/use_cases/colaborador/colaborador_usecases.dart';
 import 'package:timbox/src/domain/use_cases/post/post_usecases.dart';
+import 'package:timbox/src/presentation/pages/auth/lostPasword/lost_password_page.dart';
+import 'package:timbox/src/presentation/pages/auth/lostPasword/lost_password_viewmodel.dart';
 import 'package:timbox/src/presentation/pages/auth/register/register_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_page.dart';
 import 'package:timbox/src/presentation/pages/home/carga_archivos/carga_archivos_viewmodel.dart';
@@ -40,6 +42,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ColaboradorViewModel(locator<ColaboradorUseCases>())),
         ChangeNotifierProvider(create: (context) => EmpleadosViewmodel(locator<ColaboradorUseCases>())),
         ChangeNotifierProvider(create: (context) => ServiciosViewmodel(locator<PostUseCases>())),
+        ChangeNotifierProvider(create: (context) => LostPasswordViewModel(locator<AuthUseCases>())),
 
 
       ],
@@ -68,6 +71,7 @@ class MyApp extends StatelessWidget {
             routes: {
               'login': (context) => LoginPage(),
               'register': (context) => RegisterPage(),
+              'lostPassword': (context) => LostPasswordPage(),
               'cargaArchivos': (context) => AuthGuard(child: CargaArchivosPage()),
               'colaborador': (context) => AuthGuard(child: ColaboradorPage()),
               'empleados': (context) => AuthGuard(child: EmpleadosPage()),

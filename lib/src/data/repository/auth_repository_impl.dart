@@ -62,5 +62,60 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<bool> lostPassword(String correo, String rfc) async {
+    final url = Uri.parse(
+        '$baseUrl/validate'); // Reemplaza con tu URL
+    try {
+      print('enviando datos');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'correo': correo, 'rfc': rfc}),
+      );
+
+      if (response.statusCode == 200) {
+        print('respuesta 200');
+        final data = jsonDecode(response.body);
+        return true;
+      }
+      print('respuesta no 200');
+      return false;
+    }catch(e){
+      return false;
+    }
+  }
+
+
+  Future<bool> updatePassword(String correo, String rfc, String nuevaPassword) async {
+    final url = Uri.parse('$baseUrl/update-password'); // Reemplaza con tu URL base
+    try {
+      print('Enviando datos para actualizar contraseña');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'correo': correo,
+          'rfc': rfc,
+          'nuevaPassword': nuevaPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Contraseña actualizada exitosamente');
+        return true;
+      } else {
+        print('Error al actualizar contraseña: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error al realizar la solicitud: $e');
+      return false;
+    }
+  }
+
+
+
+
 
 }

@@ -161,6 +161,45 @@ app.post("/login", async (req, res) => {
 });
 
 
+app.post("/update-password", async (req, res) => {
+    try {
+        const { correo, rfc, nuevaPassword } = req.body;
+
+        // Validar que todos los campos estén presentes
+        if (!correo || !rfc || !nuevaPassword) {
+            return res.status(400).json({ error: "El correo, RFC y la nueva contraseña son requeridos." });
+        }
+
+        // Verificar si el correo y RFC coinciden con un registro
+        const userQuery = `SELECT * FROM Personas WHERE correo = ? AND rfc = ?`;
+        const users = await query(userQuery, [correo, rfc]);
+
+        if (users.length === 0) {
+            // Respuesta genérica para evitar revelar información
+            return res.status(404).json({ error: "No se encontró ningún usuario con las credenciales proporcionadas." });
+        }
+
+        const user = users[0];
+
+        // Generar el hash de la nueva contraseña
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(nuevaPassword, saltRounds);
+
+        // Actualizar la contraseña en la base de datos
+        const updateQuery = `UPDATE Personas SET password = ? WHERE id = ?`;
+        await query(updateQuery, [hashedPassword, user.id]);
+
+        // Responder con éxito
+        res.status(200).json({
+            message: "Contraseña actualizada exitosamente.",
+        });
+    } catch (error) {
+        console.error("Error al actualizar la contraseña:", error.message);
+        res.status(500).json({ error: "Error interno del servidor." });
+    }
+});
+
+
 
 // 1. Listar todos los archivos
 app.get("/files", async (req, res) => {
@@ -485,6 +524,42 @@ app.delete("/colaboradorDelete/:id", async (req, res) => {
     console.error("Error al eliminar archivo:", error.message);
     res.status(500).json({ error: "Error interno del servidor." });
   }
+});
+
+
+
+app.post("/validate", async (req, res) => {
+    try {
+        const { correo, rfc } = req.body;
+
+        // Validar que ambos campos estén presentes
+        if (!correo || !rfc) {
+            return res.status(400).json({ error: "El correo y el RFC son requeridos." });
+        }
+
+        // Consultar la base de datos para verificar el correo y el RFC
+        const queryStr = `SELECT id FROM Personas WHERE correo = ? AND rfc = ?`;
+        const result = await query(queryStr, [correo, rfc]);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "No se encontró un usuario con el correo y RFC proporcionados." });
+        }
+
+        // Extraer el ID del usuario si se encuentra la coincidencia
+        const userId = result[0].id;
+
+        return res.status(200).json({
+            message: "Validación exitosa.",
+            user: {
+                id: userId,
+                correo: correo,
+                rfc: rfc,
+            },
+        });
+    } catch (error) {
+        console.error("Error en la validación:", error.message);
+        return res.status(500).json({ error: "Error interno del servidor." });
+    }
 });
 
 

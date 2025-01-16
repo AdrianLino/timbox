@@ -36,12 +36,6 @@ class Layout extends StatelessWidget {
               ? AppBar(
             title: const Text("Mi App"),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
-                },
-              ),
             ],
           )
               : null,
@@ -118,31 +112,31 @@ class LeftBar extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   // Ejemplo de items de navegación
                   NavigationItem(
                     iconData: LucideIcons.home,
                     title: "Home",
                     route: "cargaArchivos",
-                    isCondensed: false,
+                    isCondensed: isCondensed, // Pasar el estado de `isCondensed`
                   ),
                   NavigationItem(
                     iconData: LucideIcons.baggageClaim,
                     title: "Colaborador",
                     route: "colaborador",
-                    isCondensed: false,
+                    isCondensed: isCondensed,
                   ),
                   NavigationItem(
                     iconData: LucideIcons.archive,
                     title: "Empleados",
                     route: "empleados",
-                    isCondensed: false,
+                    isCondensed: isCondensed,
                   ),
                   NavigationItem(
                     iconData: LucideIcons.archive,
                     title: "Servicios",
                     route: "servicios",
-                    isCondensed: false,
+                    isCondensed: isCondensed,
                   ),
                 ],
               ),
@@ -153,6 +147,7 @@ class LeftBar extends StatelessWidget {
     );
   }
 }
+
 
 // --------------------------------------------------
 // RightBar
@@ -205,17 +200,17 @@ class TopBar extends StatelessWidget {
       color: Colors.grey.shade200,
       child: Row(
         children: [
+
+          Container(
+            child: const Text("Timbox", style: TextStyle(fontSize: 24, color: BASE_COLOR)),
+          ),
+
           IconButton(
             icon: const Icon(Icons.menu, color: BASE_COLOR),
             onPressed: controller.toggleLeftBarCondensed,
           ),
           const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.settings, color: BASE_COLOR),
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
-          ),
+
         ],
       ),
     );

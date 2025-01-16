@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:timbox/src/presentation/pages/auth/register/register_state.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../domain/use_cases/auth/auth_usecases.dart';
 import '../../../../domain/utils/resource.dart';
@@ -22,7 +23,7 @@ class RegisterViewModel extends ChangeNotifier{
   RegisterViewModel(this._authUseCases);
 
 
-  register() async{
+  register(context) async{
     if (_state.isValid()) {
       _responsecontroller.add(Loading()); //esperando la respuesta
       final data =await _authUseCases.register.launch(user:
@@ -31,7 +32,16 @@ class RegisterViewModel extends ChangeNotifier{
       _responsecontroller.add(data);
 
     } else {
-      print("El formulario no es valido");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        toastification.show(
+          context: context,
+          title: Text("Error"),
+          description: Text('Todo tu formulario debe estar lleno'),
+          type: ToastificationType.warning,
+          autoCloseDuration: Duration(seconds: 3),
+          animationDuration: Duration(milliseconds: 300),
+        );
+      });
     }
   }
 

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-
-import 'package:provider/provider.dart';
-import 'package:timbox/src/presentation/pages/auth/register/register_viewmodel.dart';
-
+import 'package:timbox/src/presentation/pages/auth/lostPasword/lost_password_viewmodel.dart';
 import '../../../utils/base_color.dart';
 import '../../../widget/default_button.dart';
 import '../../../widget/default_textfield.dart';
 
-class RegisterContent extends StatelessWidget {
+class LostPasswordContent extends StatelessWidget {
 
-  RegisterViewModel vm;
-  RegisterContent(this.vm);
+  LostPasswordViewModel vm;
+
+  LostPasswordContent(this.vm);
 
 
   @override
@@ -33,23 +31,23 @@ class RegisterContent extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.only(left: 20, top: 40),
                     child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
                           Icons.arrow_back_ios,
                           size: 35
-                        ),
+                      ),
                     ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
 
-                      Text("Continua con tu registro",
+                      Text("Valida tu cuenta",
                         style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold
                         ),
                       ),
                     ],
@@ -68,15 +66,16 @@ class RegisterContent extends StatelessWidget {
                   margin: EdgeInsets.only(top: 50),
                   child: Column(
                     children: [
-                      DefaultTextField(label: 'Nombre de usuario', icon: Icons.person_outline,error:vm.state.username.error, onChanged: (value) { vm.changeUsername(value);}),
                       DefaultTextField(label: 'Correo Electronico', icon: Icons.email_outlined,error: vm.state.email.error, onChanged: (value) {vm.changeEmail(value);}),
                       DefaultTextField(label: 'RFC', icon: Icons.account_box_outlined,error: vm.state.rfc.error, onChanged: (value) {vm.changerfc(value);}),
-                      DefaultTextField(label: 'Contraeña', icon: Icons.lock_outlined,obscureText: true,error: vm.state.password.error, onChanged: (value) {vm.changePassword(value);}),
-                      DefaultTextField(label: 'Confirmar Contraseña', icon: Icons.lock_outline_rounded,obscureText: true,error: vm.state.confirmPassword.error, onChanged: (value) {vm.changeConfirmPassword(value);}),
                       Container(
-                      margin: EdgeInsets.symmetric(vertical: 40),
+                          margin: EdgeInsets.symmetric(vertical: 40),
                           child:
-                            DefaultButton(text: 'Registrarse', onPressed: () {vm.register(context);})
+                          DefaultButton(text: 'Validar',
+                              onPressed: () {
+                            vm.ConfirmCredentials(context);
+                            //vm.register();
+                          })
                       )
                     ],
                   ),

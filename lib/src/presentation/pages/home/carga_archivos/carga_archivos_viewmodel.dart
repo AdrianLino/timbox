@@ -8,13 +8,11 @@ import '../../../../domain/use_cases/archivo/archivo_usescases.dart';
 import '../../../../domain/utils/resource.dart';
 import '../../utils/auth_viewmodel.dart';
 
-class ArchivosViewModel extends ChangeNotifier{
+class ArchivosViewModel extends ChangeNotifier {
 
   ArchivoUseCases archivoUseCases;
 
   ArchivosViewModel(this.archivoUseCases);
-
-
 
     Future<Resource> subirArchivo(String nombre) async{
     final result = await FilePicker.platform.pickFiles(

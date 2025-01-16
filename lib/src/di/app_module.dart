@@ -14,7 +14,9 @@ import '../domain/use_cases/archivo/obtener_archivo_usecase.dart';
 import '../domain/use_cases/archivo/subir_archivo_usecases.dart';
 import '../domain/use_cases/auth/auth_usecases.dart';
 import '../domain/use_cases/auth/login_usecases.dart';
+import '../domain/use_cases/auth/lost_pasword_usecases.dart';
 import '../domain/use_cases/auth/register_usercases.dart';
+import '../domain/use_cases/auth/update_password_usecase.dart';
 import '../domain/use_cases/colaborador/colaborador_usecases.dart';
 import '../domain/use_cases/colaborador/delete_colaborador_usecase.dart';
 import '../domain/use_cases/colaborador/get_colaborador_usecase.dart';
@@ -54,6 +56,8 @@ abstract class AppModule {
   AuthUseCases get authUseCases => AuthUseCases(
     login: LogininUseCase(authRepository),
     register: RegisterUseCase(authRepository),
+    lostPassword: LostPasswordUseCase(authRepository),
+    updatePassword: UpdatePasswordUseCase(authRepository)
   );
 
   @injectable
